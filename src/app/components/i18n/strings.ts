@@ -2,7 +2,7 @@
 
 export type Lang = "en" | "es";
 
-// 👇 The SHAPE of all strings (values are `string`, not string literals)
+// The full shape for every locale
 export type Strings = {
   topbar: string;
   brand: string;
@@ -60,9 +60,28 @@ export type Strings = {
     create: string;
     noAccount: string;
   };
+
+  // ✅ NEW: Create-account modal block
+  signup: {
+    title: string;
+    subtitle: string;
+    name: string;
+    email: string;
+    phone: string;
+    password: string;
+    confirm: string;
+    tos: string;
+    create: string;
+    haveAcct: string;
+    login: string;
+    mismatch: string;
+    shortPw: string;
+    genericErr: string;
+    success: string;
+  };
 };
 
-// 👇 Concrete values, checked against the shape, but NOT narrowed to literals
+// Concrete values for each locale
 export const ui = {
   en: {
     topbar: "Friendly • Trustworthy • Fully Insured",
@@ -158,6 +177,24 @@ export const ui = {
       signin: "Sign in",
       create: "Create one",
       noAccount: "Don’t have an account?",
+    },
+    // ✅ added
+    signup: {
+      title: "Create your account",
+      subtitle: "Join in under a minute.",
+      name: "Full name",
+      email: "Email",
+      phone: "Phone (optional)",
+      password: "Password",
+      confirm: "Confirm password",
+      tos: "By creating an account, you agree to our Terms & Privacy.",
+      create: "Create account",
+      haveAcct: "Already have an account?",
+      login: "Log in",
+      mismatch: "Passwords don’t match.",
+      shortPw: "Password must be at least 8 characters.",
+      genericErr: "Something went wrong. Please try again.",
+      success: "Account created! Redirecting…",
     },
   },
   es: {
@@ -255,6 +292,24 @@ export const ui = {
       signin: "Iniciar sesión",
       create: "Crear una",
       noAccount: "¿No tienes cuenta?",
+    },
+    // ✅ added
+    signup: {
+      title: "Crea tu cuenta",
+      subtitle: "Regístrate en menos de un minuto.",
+      name: "Nombre completo",
+      email: "Correo electrónico",
+      phone: "Teléfono (opcional)",
+      password: "Contraseña",
+      confirm: "Confirmar contraseña",
+      tos: "Al crear una cuenta, aceptas nuestros Términos y Privacidad.",
+      create: "Crear cuenta",
+      haveAcct: "¿Ya tienes cuenta?",
+      login: "Inicia sesión",
+      mismatch: "Las contraseñas no coinciden.",
+      shortPw: "La contraseña debe tener al menos 8 caracteres.",
+      genericErr: "Ocurrió un error. Inténtalo de nuevo.",
+      success: "¡Cuenta creada! Redirigiendo…",
     },
   },
 } satisfies Record<Lang, Strings>;

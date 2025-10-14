@@ -5,10 +5,12 @@ import { useState, type ReactNode } from "react";
 import LoginModal from "./components/LoginModal";
 import { useRouter } from "next/navigation";
 import { useLang } from "./components/i18n/LangProvider";
+import CreateAccountModal from "./components/CreateAccountModal";
 
 export default function HomePage() {
   const router = useRouter();
   const [loginOpen, setLoginOpen] = useState(false);
+  const [signupOpen, setSignupOpen] = useState(false);
 
   // 👇 use the shared i18n context
   const { lang, setLang, strings: t } = useLang();
@@ -367,7 +369,24 @@ export default function HomePage() {
         isOpen={loginOpen}
         onClose={() => setLoginOpen(false)}
         onLoginSuccess={onLoginSuccess}
-        next="/dashboard"
+        onSwitchToSignup={() => {
+          setLoginOpen(false);
+          setTimeout(() => setSignupOpen(true), 120);
+        }}
+      />
+      <CreateAccountModal
+        isOpen={signupOpen}
+        onClose={() => setSignupOpen(false)}
+        onSignupSuccess={() => {
+          // what you want after successful signup:
+          // close signup modal; optionally open login to let them sign in
+          setSignupOpen(false);
+          setTimeout(() => setLoginOpen(true), 120); // optional
+        }}
+        onSwitchToLogin={() => {
+          setSignupOpen(false);
+          setTimeout(() => setLoginOpen(true), 120);
+        }}
       />
     </main>
   );

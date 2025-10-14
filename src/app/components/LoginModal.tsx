@@ -1,14 +1,15 @@
+// src/app/components/LoginModal.tsx
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
 import { useLang } from "./i18n/LangProvider";
+// (keep useRouter ONLY if you still navigate after login)
 
 type ModalProps = {
   isOpen: boolean;
   onClose: () => void;
   onLoginSuccess: () => void;
-  next?: string | null;
+  onSwitchToSignup?: () => void; // ✅ add this
 };
 
 async function api(path: string, init: RequestInit = {}) {
@@ -19,10 +20,9 @@ const LoginModal: React.FC<ModalProps> = ({
   isOpen,
   onClose,
   onLoginSuccess,
-  next,
+  onSwitchToSignup, // ✅ destructure it
 }) => {
-  const router = useRouter();
-  const { strings } = useLang(); // ⬅️ use strings from provider
+  const { strings } = useLang();
   const cardRef = useRef<HTMLDivElement>(null);
   const firstInputRef = useRef<HTMLInputElement>(null);
 
@@ -68,7 +68,7 @@ const LoginModal: React.FC<ModalProps> = ({
       <div
         ref={cardRef}
         onMouseDown={(e) => e.stopPropagation()}
-        className="relative w-full max-w-md rounded-3xl bg-white/60 backdrop-blur-xl border border-white/30 shadow-2xl p-8 animate-[pop_.25s_ease-out]"
+        className="relative w-full max-w-md rounded-3xl bg-white/60 backdrop-blur-xl border border-white/30 shadow-2xl p-8 animate-pop"
       >
         {/* Close */}
         <button
@@ -133,29 +133,15 @@ const LoginModal: React.FC<ModalProps> = ({
           {strings.login.noAccount}{" "}
           <button
             type="button"
-            onClick={() =>
-              router.push(
-                "/register" + (next ? `?next=${encodeURIComponent(next)}` : "")
-              )
-            }
+            onClick={() => {
+              onClose();
+              if (onSwitchToSignup) onSwitchToSignup(); // ✅ switch modals, no routing
+            }}
             className="text-green-600 hover:underline font-medium"
           >
             {strings.login.create}
           </button>
         </p>
-
-        <style jsx>{`
-          @keyframes pop {
-            from {
-              opacity: 0;
-              transform: translateY(6px) scale(0.98);
-            }
-            to {
-              opacity: 1;
-              transform: translateY(0) scale(1);
-            }
-          }
-        `}</style>
       </div>
     </div>
   );
