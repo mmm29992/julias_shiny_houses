@@ -2,9 +2,19 @@ import "dotenv/config";
 import express from "express";
 import mongoose from "mongoose";
 import { connectDB, disconnectDB } from "./config/db";
+import cookieParser from "cookie-parser";
+import authRoutes from "./routes/auth";
+import quotesRoutes from "./routes/quotes";
+
+
 
 const app = express();
 app.use(express.json());
+
+// express app
+app.use(cookieParser());
+app.use("/auth", authRoutes);
+app.use("/quotes", quotesRoutes);
 
 const PORT = Number(process.env.PORT) || 4000;
 
