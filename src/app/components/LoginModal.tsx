@@ -52,8 +52,24 @@ const LoginModal: React.FC<ModalProps> = ({
   }
 
   async function handleLogin(e: React.FormEvent) {
-    /* unchanged */
+    e.preventDefault();
+    setLoading(true);
+    setErr(null);
+    try {
+      await api("/auth/login", {
+        method: "POST",
+        body: JSON.stringify({ email, password }),
+      });
+      onClose();
+      onLoginSuccess(); // parent will push("/dashboard")
+    } catch (err: any) {
+      setErr(err?.message || "Failed to sign in.");
+    } finally {
+      setLoading(false);
+    }
   }
+
+
 
   if (!isOpen) return null;
 

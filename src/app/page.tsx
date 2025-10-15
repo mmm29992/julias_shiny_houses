@@ -15,9 +15,11 @@ export default function HomePage() {
   // 👇 use the shared i18n context
   const { lang, setLang, strings: t } = useLang();
 
-  function onLoginSuccess() {
-    router.refresh();
-  }
+ function onLoginSuccess() {
+   setLoginOpen(false);
+   router.push("/dashboard");
+   setTimeout(() => router.refresh(), 0); // optional: update header/auth UI
+ }
 
   return (
     <main className="min-h-screen bg-white text-slate-800">
@@ -371,17 +373,17 @@ export default function HomePage() {
         onLoginSuccess={onLoginSuccess}
         onSwitchToSignup={() => {
           setLoginOpen(false);
-          setTimeout(() => setSignupOpen(true), 120);
+          setTimeout(() => setSignupOpen(true), 120); // open signup modal
         }}
       />
+
       <CreateAccountModal
         isOpen={signupOpen}
         onClose={() => setSignupOpen(false)}
         onSignupSuccess={() => {
-          // what you want after successful signup:
-          // close signup modal; optionally open login to let them sign in
           setSignupOpen(false);
-          setTimeout(() => setLoginOpen(true), 120); // optional
+          router.push("/dashboard");
+          setTimeout(() => router.refresh(), 0);
         }}
         onSwitchToLogin={() => {
           setSignupOpen(false);

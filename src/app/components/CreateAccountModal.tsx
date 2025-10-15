@@ -93,12 +93,16 @@ export default function CreateAccountModal({
     return true;
   };
 
-  const onSubmit = async (e: React.FormEvent) => {
+  // Replace your `const onSubmit = async (...) => { ... }` with:
+  async function handleSignup(e: React.FormEvent) {
     e.preventDefault();
     if (!validate()) return;
+
     try {
       setSubmitting(true);
       setErr(null);
+
+      // 1) Create account
       await api("/api/auth/register", {
         method: "POST",
         body: JSON.stringify({
@@ -109,14 +113,25 @@ export default function CreateAccountModal({
           next,
         }),
       });
+
+      // 2) If your backend does NOT auto-login on register, log in now:
+      try {
+        await api("/api/auth/login", {
+          method: "POST",
+          body: JSON.stringify({ email, password }),
+        });
+      } catch {
+        // safe to ignore if your backend already set the session on register
+      }
+
       setOkMsg(copy.success);
-      onSignupSuccess();
+      onSignupSuccess(); // parent will push("/dashboard")
     } catch (e: any) {
       setErr(e?.message || copy.genericErr);
     } finally {
       setSubmitting(false);
     }
-  };
+  }
 
   if (!isOpen) return null;
 
@@ -181,7 +196,7 @@ export default function CreateAccountModal({
           </div>
 
           {/* Form */}
-          <form onSubmit={onSubmit} className="space-y-4">
+          <form onSubmit={handleSignup} className="space-y-4">
             <div className="grid gap-1.5">
               <label
                 htmlFor="su-name"
